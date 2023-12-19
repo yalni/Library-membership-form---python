@@ -1,0 +1,24 @@
+import anvil.email
+import anvil.tables as tables
+import anvil.tables.query as q
+from anvil.tables import app_tables
+import anvil.server
+
+# This is a server module. It runs on the Anvil server,
+# rather than in the user's browser.
+#
+# To allow anvil.server.call() to call functions here, we mark
+# them with @anvil.server.callable.
+# Here is an example - you can replace it with your own:
+#
+@anvil.server.callable
+def submit_button(name,address,id):
+  app_tables.library.add_row(
+    name=name, 
+    address=address, 
+    id=id #email referred as id
+  )
+
+  anvil.email.send(to=" example@gmail.com",
+    subject=f"Feedback from {name}",
+    text=f""" A new person has filled out the feedback form! Name: {name} Email address: {id} please do the payment to nearby library branch & collect the receipt with membership card """)
